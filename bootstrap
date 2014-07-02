@@ -1,0 +1,18 @@
+data(iris)
+Y=as.matrix(iris[,-5])
+B=1000 #num de muestras bootstrap
+p=rep(NA,B)
+n=nrow(Y)
+k=2
+for(i in 1:B)
+{
+  indice=sample(1:n,size=n,replace=TRUE)
+  YBoot=Y[indice,]
+  SBoot=cov(YBoot)
+  out.eigen.boot=eigen(SBoot)
+  Lambda.boot=out.eigen.boot$values
+  p[i]=sum(Lambda.boot[1:k]/sum(Lambda.boot))
+}
+cp=prcomp(x=Y);cumsum(cp$sdev)/sum(cp$sdev)
+hist(p)
+quantile(p,c(.025,.975))
